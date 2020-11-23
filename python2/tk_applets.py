@@ -29,10 +29,8 @@ def error_msg(msg):
 def check_form(pj_name, task_type, select_val, d_time):
     d_count_ = d_time.count('-')
     get_tache_sql = "select id from oa_tache where `explain` = '%s'" % (select_val)
-    print get_tache_sql
     tache_data = db.find(get_tache_sql)
     get_pj_sql = "select id from oa_project where project_name = '%s'" % (pj_name)
-    print get_pj_sql
     pj_data = db.find(get_pj_sql)
     if not pj_data:
         error_msg('项目名称输入错误')

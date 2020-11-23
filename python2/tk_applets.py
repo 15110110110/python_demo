@@ -22,15 +22,30 @@ def create_excel():
     message.showinfo('通知', '开始生成')
 
 
-def check_form(pj_name, task_type):
-    dd(task_type)
+def error_msg(msg):
+    message.showerror('错误信息', msg)
+
+
+def check_form(pj_name, task_type, select_val, d_time):
+    d_count_ = d_time.count('-')
+    get_tache_sql = "select id from oa_tache where `explain` = '%s'" % (select_val)
+    print get_tache_sql
+    tache_data = db.find(get_tache_sql)
     get_pj_sql = "select id from oa_project where project_name = '%s'" % (pj_name)
+    print get_pj_sql
     pj_data = db.find(get_pj_sql)
     if not pj_data:
-        message.showerror('错误信息', '项目名称输入错误')
+        error_msg('项目名称输入错误')
         return
     else:
         project_id = pj_data['id']
+    if not tache_data:
+        error_msg('环节错误')
+    else:
+        tache_id = tache_data['id']
+    if d_count_ != 2:
+        error_msg('日期格式不正确')
+        return
 
 
 if __name__ == '__main__':
@@ -41,9 +56,8 @@ if __name__ == '__main__':
     for t in tache_data:
         new_tache.append(t['explain'])
     tache_data = tuple(new_tache)
-    window = Tk.Tk(className='小程序')
-    window.minsize(500, 400)
-    window.maxsize(600, 500)
+    window = Tk.Tk()
+    window.geometry('500x400')
     x = 100
     y = 15
     project_name = Tk.StringVar()
@@ -76,6 +90,10 @@ if __name__ == '__main__':
     x = x + 100
     project_name_val = project_name.get()
     task_type = type_val.get()
-    button1 = Tk.Button(window, text='生成EXCEL', bg='#00FFFF', command=lambda: check_form(project_name_val, task_type))
+    select_val = clist.get()
+    print select_val
+    date_val = date_time.get()
+    button1 = Tk.Button(window, text='生成EXCEL', bg='#00FFFF',
+                        command=lambda: check_form(project_name_val, task_type, select_val, date_val))
     button1.place(x=x, y=y)
     window.mainloop()

@@ -46,9 +46,16 @@ def check_form(pj_name, task_type, select_val, d_time):
     if d_count_ != 2:
         error_msg('日期格式不正确')
         return
-
+    create_excel()
 
 if __name__ == '__main__':
+    get_project_data_sql = 'select `project_name` from oa_project where is_show = 1'
+    db = Db.DataBaseHandle()
+    project_data = db.selectDb(get_project_data_sql)
+    new_project = []
+    for p in project_data:
+        new_project.append(p['project_name'])
+    new_project = tuple(new_project)
     get_tache_sql = 'select `explain` from oa_tache where id not in (15,27)'
     db = Db.DataBaseHandle()
     tache_data = db.selectDb(get_tache_sql)
@@ -56,7 +63,7 @@ if __name__ == '__main__':
     for t in tache_data:
         new_tache.append(t['explain'])
     tache_data = tuple(new_tache)
-    window = Tk.Tk()
+    window = Tk.Tk(className='小脚本')
     window.geometry('500x400')
     x = 100
     y = 15
@@ -64,8 +71,12 @@ if __name__ == '__main__':
     date_time = Tk.StringVar()
     status = Tk.StringVar()
     Tk.Label(window, text='项目名称：').place(x=x, y=y)
-    project_name.set('请输入项目')
-    Tk.Entry(window, textvariable=project_name).place(x=220, y=15)
+    # project_name.set('请输入项目')
+    # Tk.Entry(window, textvariable=project_name).place(x=220, y=15)
+    project_list = TTK.Combobox(window)
+    project_list['values'] = new_project
+    project_list.current(0)
+    project_list.grid(padx=220, pady=15)
     y = y + 45
     Tk.Label(window, text='选择类型：').place(x=x, y=y)
     type_val = Tk.IntVar()
@@ -77,7 +88,7 @@ if __name__ == '__main__':
     clist = TTK.Combobox(window)
     clist['values'] = tache_data
     clist.current(0)
-    clist.grid(padx=220, pady=100)
+    clist.grid(padx=220, pady=45)
     y = y + 45
     Tk.Label(window, text='输入日期：').place(x=x, y=y)
     date_time.set(date)
@@ -88,7 +99,7 @@ if __name__ == '__main__':
     Tk.Entry(window, textvariable=status).place(x=220, y=200)
     y = y + 105
     x = x + 100
-    project_name_val = project_name.get()
+    project_name_val = project_list.get()
     task_type = type_val.get()
     select_val = clist.get()
     print select_val

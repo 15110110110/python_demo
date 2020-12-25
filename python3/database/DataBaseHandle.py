@@ -12,7 +12,7 @@ class DataBaseHandle:
         self.host = '127.0.0.1'
         self.username = 'root'
         self.password = '123456'
-        self.database = 'base_tron'
+        self.database = '247_tron'
         self.db = pymysql.connect(self.host, self.username, self.password, self.database, 3306, charset='utf8')
 
     # 插入数据库操作

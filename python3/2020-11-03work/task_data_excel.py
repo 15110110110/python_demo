@@ -69,7 +69,15 @@ x = x + 100
 
 def create_excel():
     project_val = project_list.get()
+    resource_type = type_val.get()
+    tache_name = clist.get()
+    c_time = date_time.get()
+    c_status = status.get()
     print(project_val)
+    print(resource_type)
+    print(tache_name)
+    print(c_time)
+    print(c_status)
 
 
 button1 = Tk.Button(window, text='生成excel', command=create_excel)
